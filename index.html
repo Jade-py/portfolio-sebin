@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Open Graph / Social Media Preview -->
+<meta property="og:title" content="Portfolio | Sebin Sabu" />
+<meta property="og:description" content="Bringing Stories To Life On Screen" />
+<meta property="og:image" content="https://github.com/Jade-py/portfolio-sebin/hero4.jpeg" />
+<meta property="og:url" content="https://portfolio-sebin-five.vercel.app/" />
+<meta property="og:type" content="website" />
+
+<!-- Optional: For WhatsApp & Twitter/X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Portfolio | Sebin Sabu" />
+<meta name="twitter:description" content="Bringing Stories To Life On Screen" />
+<meta name="twitter:image" content="https://github.com/Jade-py/hero4.jpeg" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sebin Sabu | Actor Portfolio</title>
@@ -125,10 +137,11 @@ nav {
   max-width: 1200px;
   margin: auto;
   width: 100%;
-  padding-top: 80px;
+  padding-bottom: 50px;
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 60px;
+  padding-top: 20px;
   align-items: center;
 }
 
@@ -138,16 +151,14 @@ nav {
   position: relative;
   align-self: stretch;
   min-height: 520px;
-  height: 40px;
-  right: 40px;
 }
 
 .hero-image-col::after {
   content: '';
   position: absolute;
-  top: 5%;
-  right: -5%;
-  width: 100%;
+  top: 3%;
+  right: -0.5%;
+  width: 93%;
   height: 100%;
   background: var(--sand);
   z-index: -1;
@@ -158,9 +169,9 @@ nav {
 .hero-image-col::before {
   content: '';
   position: absolute;
-  top: -20px;
-  left: -22px;
-  width: 100%;
+  top: -13px;
+  left: -13px;
+  width: 90%;
   height: 97%;
   border: 2px solid var(--terra);
   border-radius: 6px;
@@ -170,8 +181,7 @@ nav {
 }
 
 .hero-portrait {
-  width: 100%;
-  height: 100%;
+  width: 97%;
   min-height: 520px;
   object-fit: cover;
   border-radius: 6px;
@@ -315,14 +325,14 @@ nav {
 .hero-stats {
   display: flex;
   gap: 48px;
-  margin-top: 80px;
-  padding-top: 40px;
-  border-top: 1px solid var(--sand);
-  padding-bottom: 60px;
+  padding: 50px 48px;
+  border-top: 2px solid var(--sand);
+  border-bottom: 1px solid var(--sand);
   align-items: center;
   justify-content: center;
   text-align: center;
   width: 100%;
+  background: var(--cream);
 }
 
 .stat-num {
@@ -372,7 +382,7 @@ nav {
 
 /* ─── SECTIONS ─── */
 .section {
-  padding: 120px 48px;
+  padding: 72px 48px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -422,8 +432,13 @@ nav {
 .experience-layout {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
-  gap: 72px;
+  gap: 64px;
   align-items: start;
+}
+
+.experience-photo-col {
+  position: relative;
+  padding: 20px 0 20px 0;
 }
 
 .experience-photo-frame {
@@ -434,10 +449,10 @@ nav {
 .experience-photo-frame::before {
   content: '';
   position: absolute;
-  top: -180px;
-  left: -22px;
+  top: -170px;
+  left: -14px;
   width: 100%;
-  height: 97%;
+  height: 96%;
   border: 2px solid var(--terra);
   border-radius: 6px;
   opacity: 0.45;
@@ -447,25 +462,66 @@ nav {
 .experience-photo-frame::after {
   content: '';
   position: absolute;
-  top: -22%;
-  right: -20px;
-  width: 100%;
-  height: 100%;
+  bottom: 150px;
+  right: -14px;
+  width: 96%;
+  height: 97%;
   background: var(--sand);
   border-radius: 4px;
   z-index: 0;
-  opacity: 0.65;
+  opacity: 0.7;
 }
 
 .experience-portrait {
-  top: -160px;
   width: 100%;
+  top: -160px;
   aspect-ratio: 3/4;
   object-fit: cover;
+  object-position: top center;
   border-radius: 6px;
   position: relative;
   z-index: 1;
   box-shadow: 0 24px 48px -8px rgba(28,22,18,0.18);
+  filter: saturate(0.88) contrast(1.04);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+              transform 0.9s cubic-bezier(0.16,1,0.3,1),
+              filter 0.9s ease;
+}
+.experience-portrait.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: saturate(0.95) contrast(1.04);
+  animation: expFloat 5s ease-in-out 0.9s infinite;
+}
+
+.experience-img-tag {
+  z-index: 2;
+  position: absolute;
+  bottom: 200px;
+  left: -30px;
+  background: var(--charcoal);
+  color: var(--cream);
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-left: 3px solid var(--terra);
+  border-right: 3px solid var(--terra);
+}
+
+.experience-img-tag em {
+  color: var(--terra);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-left: 6px;
+}
+
+@keyframes expFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
 }
 
 .about-layout {
@@ -478,7 +534,7 @@ nav {
 /* ── Left: layered portrait ── */
 .about-photo-col {
   position: relative;
-  padding: 24px 0 32px 28px;
+  padding: 20px 24px 20px 0;
 }
 
 .about-photo-frame {
@@ -489,9 +545,9 @@ nav {
 .about-photo-frame::before {
   content: '';
   position: absolute;
-  top: -205px;
-  left: -22px;
-  width: 100%;
+  top: -200px;
+  left: -14px;
+  width: 92%;
   height: 97%;
   border: 2px solid var(--terra);
   border-radius: 6px;
@@ -503,19 +559,20 @@ nav {
 .about-photo-frame::after {
   content: '';
   position: absolute;
-  top: -160px;
-  right: -20px;
-  width: 100%;
-  height: 99%;
+  bottom: 170px;
+  right: -1px;
+  width: 92%;
+  height: 97%;
   background: var(--sand);
   border-radius: 4px;
   z-index: 0;
-  opacity: 0.65;
+  opacity: 0.7;
   pointer-events: none;
 }
 
 .about-portrait {
-  width: 100%;
+  width: 97%;
+  height: 600px;
   top: -185px;
   aspect-ratio: 3/4;
   object-fit: cover;
@@ -530,8 +587,8 @@ nav {
 
 .about-photo-badge {
   position: absolute;
-  bottom: 210px;
-  right: -40px;
+  bottom: 220px;
+  right: -30px;
   background: var(--charcoal);
   color: var(--cream);
   padding: 10px 18px;
@@ -819,8 +876,28 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border-left: 1.5px solid var(--sand);
+  padding: 0 15px;
+  width: 100%;
+  height: 78%;
   margin-left: 12px;
+  max-height: 560px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Scrollbar only shows when content exceeds 4 items */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sand) var(--cream);
+  padding-right: 4px;
+}
+.timeline::-webkit-scrollbar {
+  width: 3px;
+}
+.timeline::-webkit-scrollbar-track {
+  background: var(--sand);
+  border-radius: 2px;
+}
+.timeline::-webkit-scrollbar-thumb {
+  background: var(--terra);
+  border-radius: 2px;
 }
 
 .timeline-item {
@@ -955,11 +1032,13 @@ nav {
 
 /* ─── FOOTER ─── */
 footer {
+  flex-direction: column;
+  gap: 10px;
   background: var(--charcoal);
-  padding: 24px 48px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 15px 48px;
+  border-top: 0.5px solid rgba(255,255,255,0.08);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   color: rgba(251,247,240,0.3);
   font-size: 12px;
@@ -993,44 +1072,44 @@ footer {
 @media (max-width: 900px) {
   nav { padding: 0 24px; }
   .hero { padding: 0 24px; }
-  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-  .hero-image-col { min-height: 320px; order: -1; }
-  .hero-portrait, .hero-portrait-placeholder { min-height: 320px; }
-  .hero-img-tag { left: 0; }
-  .section { padding: 80px 24px; }
-  .about-layout { grid-template-columns: 1fr; gap: 60px; }
-  .about-photo-col { padding: 20px 0 28px 20px; }
-  .about-photo-badge { right: 0; }
+  /* Hero: image BELOW text on mobile */
+  .hero-inner { grid-template-columns: 1fr; gap: 36px; }
+  .hero-text { order: 1; }
+  .hero-image-col { order: 2; min-height: 380px; right: 0; }
+  .hero-portrait, .hero-portrait-placeholder { min-height: 380px; }
+  .hero-image-col::before { top: -10px; left: -10px; }
+  .hero-img-tag { left: 0; right: auto; }
+  .section { padding: 56px 24px; }
+  /* About: content first, image below */
+  .about-layout { grid-template-columns: 1fr; gap: 40px; }
+  .about-content { order: 1; }
+  .about-photo-col { order: 2; padding: 0; }
+  .about-photo-badge { right: 0; bottom: -8px; }
+  .about-header { max-width: 100%; margin-left: 0; text-align: left; }
   .about-content { text-align: left; }
-  .about-header { text-align: left; }
-  .about-header .section-label { justify-content: flex-start; }
-  .about-header .section-label::before { display: block; }
-  .about-header .section-label::after { display: none; }
   .attrs-heading { justify-content: flex-start; }
-  .attrs-heading::before { content: '◆'; font-size: 7px; }
-  .attrs-heading::after { display: none; }
-  .attr-item { text-align: left; border-right: 1px solid var(--sand); border-left: 3px solid var(--terra); }
-  .reel-header { padding: 0 24px; }
+  /* Experience: timeline first, image below */
+  .experience-layout { grid-template-columns: 1fr; gap: 40px; }
+  .timeline { order: 1; max-height: none; overflow-y: visible; }
+  .experience-photo-col { order: 2; padding: 0; }
+  /* Reel */
+  .reel-header { padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .reel-track { padding: 0 24px 24px; }
   .reel-card { flex: 0 0 290px; height: 420px; }
   .reel-scroll-hint { padding: 0 24px; }
-  .hero-stats { gap: 28px; flex-wrap: wrap; }
-  .reel-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .contact-section { padding: 80px 24px; }
+  .reel-ghost-count { display: none; }
+  /* Stats */
+  .hero-stats { gap: 24px; flex-wrap: wrap; padding: 28px 24px; }
+  .contact-section { padding: 72px 24px; }
   footer { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
 }
 
 @media (max-width: 560px) {
   .nav-links { display: none; }
-  .hero h1 { font-size: 3.4rem; }
-  .skills-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 900px) {
-  .experience-layout {
-    grid-template-columns: 1fr;
-    gap: 60px;
-  }
+  .hero h1 { font-size: 3.2rem; }
+  .hero-image-col { min-height: 320px; }
+  .hero-portrait { min-height: 320px; }
+  .attrs-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1087,7 +1166,7 @@ footer {
         </svg>
         Your photo here
       </div>
-      <div class="hero-img-tag">Actor<em>Storyteller</em></div>
+      <div class="hero-img-tag">Director<em>Storyteller</em></div>
     </div>
     </div>
   </div>
@@ -1111,7 +1190,7 @@ footer {
 <div class="divider-full"></div>
 
 <!-- ABOUT -->
-<section id="about" class="section">
+<section id="about" class="section" style="margin-bottom: -180px;">
   <div class="about-header reveal">
     <h2 class="section-title reveal reveal-delay-1">
       Craft, <em>emotion</em><br/>& collaboration.
@@ -1248,11 +1327,13 @@ footer {
 <div class="divider-full"></div>
 
 <!-- EXPERIENCE -->
-<section id="experience" class="section">
+<section id="experience" class="section" style="margin-bottom: -120px;">
   <h2 class="section-title reveal reveal-delay-1">
     On screen,<br/><em>on stage.</em>
   </h2>
   <div class="experience-layout">
+
+    <!-- Timeline — scrollable when > 4 items -->
     <div class="timeline">
       <div class="timeline-item reveal reveal-delay-2">
         <div class="timeline-dot"></div>
@@ -1276,17 +1357,31 @@ footer {
         <div class="timeline-dot"></div>
         <div class="timeline-year">2023</div>
         <div class="timeline-role">Kozhi</div>
-        <div class="timeline-detail">Supporting Actor — Short Film</div>
+        <div class="timeline-detail">Actor & Editor — Short Film</div>
         <p class="timeline-description">
-          Delivered a nuanced and memorable performance in this independent short film.
+          Brought dual craft as both performer and editor, shaping the final narrative.
+        </p>
+      </div>
+      <div class="timeline-item reveal reveal-delay-4">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2022</div>
+        <div class="timeline-role">Happy Vishu</div>
+        <div class="timeline-detail">Lead Performer — Short Film</div>
+        <p class="timeline-description">
+          A heartfelt lead performance celebrating tradition, family, and human connection.
         </p>
       </div>
     </div>
+
+    <!-- Portrait with scroll-triggered animation -->
     <div class="experience-photo-col">
       <div class="experience-photo-frame">
-        <img src="hero3.jpeg" class="experience-portrait" />
+        <img src="hero3.jpeg" class="experience-portrait" id="experiencePortrait" />
       </div>
+      <div class="experience-img-tag">Actor<em>Storyteller</em></div>
     </div>
+
+  </div>
 </section>
 
 <!-- CONTACT -->
@@ -1308,7 +1403,7 @@ footer {
 </section>
 
 <footer>
-  <span class="footer-name">Sebin Sabu</span>
+  <span class="footer-name">justingeorge322@gmail.com</span>
   <span>© 2026 — All Rights Reserved</span>
 </footer>
 
@@ -1388,6 +1483,8 @@ footer {
       track.scrollLeft = scrollLeft - (x - startX) * 1.4;
     });
   }
+
+
   document.querySelectorAll('.hero *').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
