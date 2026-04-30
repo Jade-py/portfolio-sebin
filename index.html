@@ -1030,6 +1030,75 @@ nav {
   transform: translateY(-2px);
 }
 
+/* ─── MAIL BOX ─── */
+.contact-email { border: none; cursor: pointer; }
+
+.mail-box {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.38s ease;
+  opacity: 0;
+  margin-top: 0;
+  width: 100%;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mail-box.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 20px;
+}
+
+.mail-box-inner { overflow: hidden; }
+
+.mail-textarea {
+  width: 100%;
+  resize: vertical;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(251,247,240,0.18);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.7;
+  padding: 16px 18px;
+  outline: none;
+  transition: border-color 0.2s;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mail-textarea::placeholder { color: rgba(251,247,240,0.35); }
+.mail-textarea:focus { border-color: var(--terra); }
+
+.mail-send-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: transparent;
+  border: 1.5px solid var(--terra);
+  color: var(--terra);
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.22s, color 0.22s, transform 0.2s;
+  float: right;
+}
+
+.mail-send-btn:hover {
+  background: var(--terra);
+  color: white;
+  transform: translateY(-2px);
+}
+
 /* ─── FOOTER ─── */
 footer {
   flex-direction: column;
@@ -1359,7 +1428,7 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-role">Tony</div>
         <div class="timeline-detail">Lead Role — Short Film</div>
         <p class="timeline-description">
-          A compelling performance as the protagonist in this award-winning short film.
+          A 15-minute character study centered on a solitary young man, driven by internal conflict and emotion. A performance-focused narrative with minimal characters and maximum depth.
         </p>
       </div>
       <div class="timeline-item reveal reveal-delay-3">
@@ -1368,7 +1437,7 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-role">Narayanimukku</div>
         <div class="timeline-detail">Supporting Actor — Short Film</div>
         <p class="timeline-description">
-          Delivered a nuanced and memorable performance in this independent short film.
+          A comedy-driven narrative following five friends making a short film, evolving into a suspenseful finale. A genre-shifting story that balances humor with a dark, unexpected twist.
         </p>
       </div>
       <div class="timeline-item reveal reveal-delay-3">
@@ -1377,7 +1446,7 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-role">Veliyappan</div>
         <div class="timeline-detail">Actor & Editor — Short Film</div>
         <p class="timeline-description">
-          Brought dual craft as both performer and editor, shaping the final narrative.
+          One cigarette. One ride home. Endless tension. A humorous story of first-time mistakes and the fear of getting caught.
         </p>
       </div>
       <div class="timeline-item reveal reveal-delay-4">
@@ -1386,7 +1455,7 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-role">Happy Vishu</div>
         <div class="timeline-detail">Lead Performer — Short Film</div>
         <p class="timeline-description">
-          A heartfelt lead performance celebrating tradition, family, and human connection.
+          Festivals, friends, and a little chaos. A fun-filled Vishu celebration that wraps up with a perfect comic twist.
         </p>
       </div>
        <div class="timeline-item reveal reveal-delay-3">
@@ -1395,7 +1464,7 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-role">Ria</div>
         <div class="timeline-detail">Lead Actor — Short Film</div>
         <p class="timeline-description">
-          Delivered a nuanced and memorable performance in this independent short film.
+          A girl sneaks out at night to meet her lover before leaving for Bangalore, but things don’t go as planned. A fun entertainer where tension turns into a comedic rescue
         </p>
       </div>
     </div>
@@ -1419,13 +1488,24 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       Let's create<br/><em>together.</em>
     </h2>
     <p class="contact-sub">Available for films, advertisements, and collaborations.</p>
-    <a class="contact-email" href="mailto:sebinsabu7501@gmail.com">
+    <button class="contact-email" id="mailToggleBtn" type="button" onclick="toggleMailBox(event)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
         <polyline points="22,6 12,13 2,6"/>
       </svg>
-      send me a mail 
-    </a>
+      <span id="mailBtnLabel">send me a mail</span>
+    </button>
+
+    <div id="mailBox" class="mail-box" onclick="event.stopPropagation()"><div class="mail-box-inner">
+      <textarea id="mailMessage" class="mail-textarea" placeholder="Lets talk about a project idea, a collaboration offer, or just a hello…" rows="5"></textarea>
+      <button class="mail-send-btn" id="mailSendBtn" onclick="sendMail()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+        Send
+      </button>
+    </div></div>
   </div>
 </section>
 
@@ -1523,5 +1603,50 @@ Alongside acting, I also work in editing, which helps me understand how a story 
   });
 </script>
 
+
+<script>
+  // ── Mail box toggle ──
+  const mailBox = document.getElementById('mailBox');
+  const mailBtn = document.getElementById('mailToggleBtn');
+  const mailLabel = document.getElementById('mailBtnLabel');
+  let mailOpen = false;
+
+  function toggleMailBox(e) {
+    e.stopPropagation();
+    mailOpen = !mailOpen;
+    if (mailOpen) {
+      mailBox.classList.add('open');
+      mailLabel.textContent = 'close';
+      setTimeout(() => document.getElementById('mailMessage').focus(), 380);
+    } else {
+      closeMailBox();
+    }
+  }
+
+  function closeMailBox() {
+    mailOpen = false;
+    mailBox.classList.remove('open');
+    mailLabel.textContent = 'send me a mail';
+  }
+
+  document.addEventListener('click', function(e) {
+    if (mailOpen && !mailBox.contains(e.target) && e.target !== mailBtn) {
+      closeMailBox();
+    }
+  });
+
+  function sendMail() {
+    const msg = document.getElementById('mailMessage').value.trim();
+    if (!msg) {
+      document.getElementById('mailMessage').focus();
+      return;
+    }
+    const subject = encodeURIComponent('Message from Portfolio');
+    const body = encodeURIComponent(msg);
+    window.location.href = `mailto:sebinsabu7501@gmail.com?subject=${subject}&body=${body}`;
+    document.getElementById('mailMessage').value = '';
+    closeMailBox();
+  }
+</script>
 </body>
 </html>
