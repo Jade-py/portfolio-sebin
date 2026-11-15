@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FBF7F0;
+  --warm-white: #FFFCF7;
+  --charcoal: #1C1612;
+  --terra: #D95F2B;
+  --amber: #F0A500;
+  --sand: #E8DDD0;
+  --muted: #7A6F65;
+  --surface: #FFFFFF;
+  --danger: #B03A2E;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  min-height: 100vh;
+}
+
+/* ── Login screen ── */
+#loginScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--sand);
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 380px;
+}
+.login-card h1 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.field input, .field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--sand);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--warm-white);
+  color: var(--charcoal);
+}
+.field textarea { resize: vertical; min-height: 80px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.btn:hover { opacity: 0.85; }
+.btn-primary { background: var(--terra); color: #fff; }
+.btn-ghost { background: transparent; color: var(--charcoal); border: 1px solid var(--sand); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-full { width: 100%; }
+.error-msg {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 10px;
+  display: none;
+}
+
+/* ── Admin screen ── */
+#adminScreen { display: none; }
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--sand);
+  background: var(--warm-white);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.admin-header h1 { font-size: 18px; font-weight: 500; }
+.admin-body { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.project-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.project-row {
+  background: var(--surface);
+  border: 1px solid var(--sand);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.project-row-main { min-width: 0; }
+.project-row-title { font-weight: 500; font-size: 15px; }
+.project-row-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.project-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.icon-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--sand);
+  border-radius: 6px;
+  background: var(--warm-white);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--charcoal);
+}
+.icon-btn:hover { background: var(--sand); }
+.empty-state { color: var(--muted); font-size: 14px; padding: 24px 0; }
+
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--sand);
+  border-radius: 10px;
+  padding: 24px;
+  display: none;
+}
+.form-card.open { display: block; }
+.form-card h2 { font-size: 16px; font-weight: 500; margin-bottom: 18px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid .field-full { grid-column: 1 / -1; }
+.form-actions { display: flex; gap: 10px; margin-top: 20px; }
+.save-msg { font-size: 13px; margin-top: 10px; display: none; }
+.save-msg.success { color: #3d7a4a; }
+.save-msg.error { color: var(--danger); }
+
+.section-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+@media (max-width: 560px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .project-row { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>Admin Login</h1>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Log in</button>
+      <p class="error-msg" id="loginError">Invalid email or password.</p>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminScreen">
+  <div class="admin-header">
+    <h1>Manage Projects</h1>
+    <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+  </div>
+
+  <div class="admin-body">
+    <p class="section-label">Selected Work &amp; Stories in Brief — shared project list</p>
+
+    <div class="project-list" id="projectList"></div>
+
+    <button class="btn btn-primary" id="addNewBtn">+ Add new project</button>
+
+    <div class="form-card" id="formCard">
+      <h2 id="formTitle">Add project</h2>
+      <form id="projectForm">
+        <input type="hidden" id="editingId" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="fTitle">Title</label>
+            <input type="text" id="fTitle" required />
+          </div>
+          <div class="field">
+            <label for="fYear">Year</label>
+            <input type="text" id="fYear" required />
+          </div>
+          <div class="field">
+            <label for="fYoutube">YouTube URL</label>
+            <input type="url" id="fYoutube" required placeholder="https://youtu.be/..." />
+          </div>
+          <div class="field">
+            <label for="fOrder">Display order</label>
+            <input type="number" id="fOrder" required value="0" />
+          </div>
+          <div class="field">
+            <label for="fCardTag">Card tag <span style="color:var(--muted)">(e.g. "Short Film · Lead")</span></label>
+            <input type="text" id="fCardTag" required />
+          </div>
+          <div class="field">
+            <label for="fRoleTag">Role tag <span style="color:var(--muted)">(e.g. "Dramatic Lead &amp; Editor")</span></label>
+            <input type="text" id="fRoleTag" required />
+          </div>
+          <div class="field field-full">
+            <label for="fTimelineDetail">Timeline detail <span style="color:var(--muted)">(e.g. "Lead Role — Short Film")</span></label>
+            <input type="text" id="fTimelineDetail" required />
+          </div>
+          <div class="field field-full">
+            <label for="fDescription">Description</label>
+            <textarea id="fDescription" required></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+          <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        </div>
+        <p class="save-msg" id="saveMsg"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  const loginScreen = document.getElementById('loginScreen');
+  const adminScreen = document.getElementById('adminScreen');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const projectList = document.getElementById('projectList');
+  const formCard = document.getElementById('formCard');
+  const formTitle = document.getElementById('formTitle');
+  const projectForm = document.getElementById('projectForm');
+  const addNewBtn = document.getElementById('addNewBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const saveMsg = document.getElementById('saveMsg');
+  const editingId = document.getElementById('editingId');
+
+  const fields = ['fTitle', 'fYear', 'fYoutube', 'fOrder', 'fCardTag', 'fRoleTag', 'fTimelineDetail', 'fDescription']
+    .reduce((acc, id) => { acc[id] = document.getElementById(id); return acc; }, {});
+
+  async function showAdmin() {
+    loginScreen.style.display = 'none';
+    adminScreen.style.display = 'block';
+    await loadProjects();
+  }
+
+  function showLogin() {
+    adminScreen.style.display = 'none';
+    loginScreen.style.display = 'flex';
+  }
+
+  (async function init() {
+    const session = await getSession();
+    if (session) await showAdmin();
+  })();
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.style.display = 'none';
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const { error } = await login(email, password);
+    if (error) {
+      loginError.textContent = error.message;
+      loginError.style.display = 'block';
+      return;
+    }
+    await showAdmin();
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await logout();
+    showLogin();
+  });
+
+  let currentProjects = [];
+
+  async function loadProjects() {
+    const projects = await fetchProjects();
+    currentProjects = projects || [];
+    renderList();
+  }
+
+  function renderList() {
+    if (currentProjects.length === 0) {
+      projectList.innerHTML = '<p class="empty-state">No projects yet — add the first one below.</p>';
+      return;
+    }
+    projectList.innerHTML = '';
+    currentProjects.forEach((project, index) => {
+      const row = document.createElement('div');
+      row.className = 'project-row';
+
+      const main = document.createElement('div');
+      main.className = 'project-row-main';
+      const title = document.createElement('div');
+      title.className = 'project-row-title';
+      title.textContent = `${project.title} (${project.year})`;
+      const meta = document.createElement('div');
+      meta.className = 'project-row-meta';
+      meta.textContent = `${project.card_tag} · order ${project.display_order}`;
+      main.append(title, meta);
+
+      const actions = document.createElement('div');
+      actions.className = 'project-row-actions';
+
+      const upBtn = document.createElement('button');
+      upBtn.className = 'icon-btn';
+      upBtn.textContent = '↑';
+      upBtn.disabled = index === 0;
+      upBtn.onclick = () => moveProject(index, -1);
+
+      const downBtn = document.createElement('button');
+      downBtn.className = 'icon-btn';
+      downBtn.textContent = '↓';
+      downBtn.disabled = index === currentProjects.length - 1;
+      downBtn.onclick = () => moveProject(index, 1);
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'icon-btn';
+      editBtn.textContent = '✎';
+      editBtn.onclick = () => openEdit(project);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'icon-btn';
+      deleteBtn.textContent = '✕';
+      deleteBtn.onclick = () => removeProject(project);
+
+      actions.append(upBtn, downBtn, editBtn, deleteBtn);
+      row.append(main, actions);
+      projectList.appendChild(row);
+    });
+  }
+
+  async function moveProject(index, direction) {
+    const other = index + direction;
+    if (other < 0 || other >= currentProjects.length) return;
+    const a = currentProjects[index];
+    const b = currentProjects[other];
+    const aOrder = a.display_order;
+    const bOrder = b.display_order;
+    await Promise.all([
+      updateProject(a.id, { display_order: bOrder }),
+      updateProject(b.id, { display_order: aOrder }),
+    ]);
+    await loadProjects();
+  }
+
+  function openAdd() {
+    editingId.value = '';
+    formTitle.textContent = 'Add project';
+    projectForm.reset();
+    fields.fOrder.value = currentProjects.length;
+    saveMsg.style.display = 'none';
+    formCard.classList.add('open');
+    formCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function openEdit(project) {
+    editingId.value = project.id;
+    formTitle.textContent = 'Edit project';
+    fields.fTitle.value = project.title;
+    fields.fYear.value = project.year;
+    fields.fYoutube.value = project.youtube_url;
+    fields.fOrder.value = project.display_order;
+    fields.fCardTag.value = project.card_tag;
+    fields.fRoleTag.value = project.role_tag;
+    fields.fTimelineDetail.value = project.timeline_detail;
+    fields.fDescription.value = project.description;
+    saveMsg.style.display = 'none';
+    formCard.classList.add('open');
+    formCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function closeForm() {
+    formCard.classList.remove('open');
+    projectForm.reset();
+  }
+
+  addNewBtn.addEventListener('click', openAdd);
+  cancelBtn.addEventListener('click', closeForm);
+
+  projectForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      title: fields.fTitle.value.trim(),
+      year: fields.fYear.value.trim(),
+      youtube_url: fields.fYoutube.value.trim(),
+      display_order: parseInt(fields.fOrder.value, 10) || 0,
+      card_tag: fields.fCardTag.value.trim(),
+      role_tag: fields.fRoleTag.value.trim(),
+      timeline_detail: fields.fTimelineDetail.value.trim(),
+      description: fields.fDescription.value.trim(),
+    };
+
+    const { error } = editingId.value
+      ? await updateProject(editingId.value, payload)
+      : await createProject(payload);
+
+    saveMsg.style.display = 'block';
+    if (error) {
+      saveMsg.className = 'save-msg error';
+      saveMsg.textContent = error.message;
+      return;
+    }
+    saveMsg.className = 'save-msg success';
+    saveMsg.textContent = 'Saved.';
+    await loadProjects();
+    setTimeout(closeForm, 500);
+  });
+
+  async function removeProject(project) {
+    if (!confirm(`Delete "${project.title}"? This can't be undone.`)) return;
+    const { error } = await deleteProject(project.id);
+    if (error) {
+      alert('Failed to delete: ' + error.message);
+      return;
+    }
+    await loadProjects();
+  }
+</script>
+</body>
+</html>

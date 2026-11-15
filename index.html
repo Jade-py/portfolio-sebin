@@ -1421,7 +1421,7 @@ Alongside acting, I also work in editing, which helps me understand how a story 
   <div class="experience-layout">
 
     <!-- Timeline — scrollable when > 4 items -->
-    <div class="timeline">
+    <div class="timeline" id="timelineTrack">
       <div class="timeline-item reveal reveal-delay-2">
         <div class="timeline-dot"></div>
         <div class="timeline-year">2025</div>
@@ -1647,6 +1647,122 @@ Alongside acting, I also work in editing, which helps me understand how a story 
     document.getElementById('mailMessage').value = '';
     closeMailBox();
   }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  // ── Hydrate "Selected work" + "Stories in brief" from Supabase, with the
+  //    hardcoded markup above left in place as a fallback if this fails. ──
+  function buildReelCard(project, index) {
+    const videoId = extractYouTubeId(project.youtube_url);
+    const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
+
+    const card = document.createElement('a');
+    card.className = 'reel-card';
+    card.href = project.youtube_url;
+    card.target = '_blank';
+    card.rel = 'noopener';
+
+    const bg = document.createElement('div');
+    bg.className = 'reel-card-bg';
+    bg.style.backgroundImage = `url('${thumb}')`;
+
+    const orb = document.createElement('div');
+    orb.className = 'orb';
+
+    const inner = document.createElement('div');
+    inner.className = 'reel-card-inner';
+
+    const number = document.createElement('div');
+    number.className = 'card-number';
+    number.textContent = String(index + 1).padStart(2, '0');
+
+    const tag = document.createElement('div');
+    tag.className = 'card-tag';
+    tag.textContent = project.card_tag;
+
+    const title = document.createElement('div');
+    title.className = 'card-title';
+    title.textContent = project.title;
+
+    const role = document.createElement('div');
+    role.className = 'card-role';
+    role.textContent = `${project.role_tag} · ${project.year}`;
+
+    const hoverLine = document.createElement('div');
+    hoverLine.className = 'card-hover-line';
+
+    inner.append(number, tag, title, role, hoverLine);
+    card.append(bg, orb, inner);
+    return card;
+  }
+
+  function buildTimelineItem(project, index) {
+    const item = document.createElement('div');
+    const delay = (index % 3) + 2; // cycles reveal-delay-2/3/4
+    item.className = `timeline-item reveal reveal-delay-${delay}`;
+
+    const dot = document.createElement('div');
+    dot.className = 'timeline-dot';
+
+    const year = document.createElement('div');
+    year.className = 'timeline-year';
+    year.textContent = project.year;
+
+    const role = document.createElement('div');
+    role.className = 'timeline-role';
+    role.textContent = project.title;
+
+    const detail = document.createElement('div');
+    detail.className = 'timeline-detail';
+    detail.textContent = project.timeline_detail;
+
+    const description = document.createElement('p');
+    description.className = 'timeline-description';
+    description.textContent = project.description;
+
+    item.append(dot, year, role, detail, description);
+    return item;
+  }
+
+  (async function hydrateProjects() {
+    const projects = await fetchProjects();
+    if (!projects || projects.length === 0) return; // keep hardcoded fallback
+
+    const reelTrack = document.getElementById('reelTrack');
+    const timelineTrack = document.getElementById('timelineTrack');
+    if (!reelTrack || !timelineTrack) return;
+
+    reelTrack.innerHTML = '';
+    timelineTrack.innerHTML = '';
+    projects.forEach((project, index) => {
+      reelTrack.appendChild(buildReelCard(project, index));
+      timelineTrack.appendChild(buildTimelineItem(project, index));
+    });
+
+    // Re-run the scroll-reveal / card-reveal observers for the freshly
+    // inserted elements (the originals only observed the static markup).
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    timelineTrack.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          cardObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reelTrack.querySelectorAll('.reel-card').forEach(el => cardObserver.observe(el));
+  })();
 </script>
 </body>
 </html>
