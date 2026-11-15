@@ -813,15 +813,6 @@ nav {
   z-index: 2;
 }
 
-.card-tag {
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--terra);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
 .card-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: 2.1rem;
@@ -943,6 +934,28 @@ nav {
   font-size: 0.8rem;
   color: var(--muted);
   font-weight: 300;
+}
+
+.timeline-thumb-link {
+  display: block;
+  margin: 16px 0 4px;
+  max-width: 360px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.timeline-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  filter: saturate(0.85);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-thumb-link:hover .timeline-thumb {
+  filter: saturate(1.1);
+  transform: scale(1.02);
 }
 
 .timeline-description {
@@ -1347,7 +1360,6 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       <div class="reel-card-bg" style="background-image:url('https://img.youtube.com/vi/Q-8WpbV5JuU/hqdefault.jpg')"></div>
       <div class="reel-card-inner">
         <div class="card-number">01</div>
-        <div class="card-tag">Short Film · Lead</div>
         <div class="card-title">Tony</div>
         <div class="card-role">Dramatic Lead & Editor· 2025</div>
         <div class="card-hover-line"></div>
@@ -1360,7 +1372,6 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       <div class="orb"></div>
       <div class="reel-card-inner">
         <div class="card-number">02</div>
-        <div class="card-tag">Short Film · Supporting</div>
         <div class="card-title">Narayanimukku</div>
         <div class="card-role">Supporting Lead · 2023</div>
         <div class="card-hover-line"></div>
@@ -1373,7 +1384,6 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       <div class="orb"></div>
       <div class="reel-card-inner">
         <div class="card-number">03</div>
-        <div class="card-tag">Short Film · Editor</div>
         <div class="card-title">Veliyappan</div>
         <div class="card-role">Lead Actor  · 2022</div>
         <div class="card-hover-line"></div>
@@ -1386,7 +1396,6 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       <div class="orb"></div>
       <div class="reel-card-inner">
         <div class="card-number">04</div>
-        <div class="card-tag">Short Film · Lead</div>
         <div class="card-title">Happy Vishu</div>
         <div class="card-role">Supporting Performer · 2022</div>
         <div class="card-hover-line"></div>
@@ -1398,7 +1407,6 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       <div class="orb"></div>
       <div class="reel-card-inner">
         <div class="card-number">05</div>
-        <div class="card-tag">Short Film · Actor</div>
         <div class="card-title">Ria</div>
         <div class="card-role">Lead Actor  · 2021</div>
         <div class="card-hover-line"></div>
@@ -1427,6 +1435,9 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-year">2025</div>
         <div class="timeline-role">Tony</div>
         <div class="timeline-detail">Lead Role — Short Film</div>
+        <a class="timeline-thumb-link" href="https://youtu.be/Q-8WpbV5JuU" target="_blank" rel="noopener">
+          <img class="timeline-thumb" src="https://img.youtube.com/vi/Q-8WpbV5JuU/mqdefault.jpg" alt="Tony" loading="lazy" />
+        </a>
         <p class="timeline-description">
           A 15-minute character study centered on a solitary young man, driven by internal conflict and emotion. A performance-focused narrative with minimal characters and maximum depth.
         </p>
@@ -1436,6 +1447,9 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-year">2023</div>
         <div class="timeline-role">Narayanimukku</div>
         <div class="timeline-detail">Supporting Actor — Short Film</div>
+        <a class="timeline-thumb-link" href="https://youtu.be/g9TWX-RDYBM" target="_blank" rel="noopener">
+          <img class="timeline-thumb" src="https://img.youtube.com/vi/g9TWX-RDYBM/mqdefault.jpg" alt="Narayanimukku" loading="lazy" />
+        </a>
         <p class="timeline-description">
           A comedy-driven narrative following five friends making a short film, evolving into a suspenseful finale. A genre-shifting story that balances humor with a dark, unexpected twist.
         </p>
@@ -1445,6 +1459,9 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-year">2022</div>
         <div class="timeline-role">Veliyappan</div>
         <div class="timeline-detail">Actor & Editor — Short Film</div>
+        <a class="timeline-thumb-link" href="https://youtu.be/Dlg9kRGVNTs" target="_blank" rel="noopener">
+          <img class="timeline-thumb" src="https://img.youtube.com/vi/Dlg9kRGVNTs/mqdefault.jpg" alt="Veliyappan" loading="lazy" />
+        </a>
         <p class="timeline-description">
           One cigarette. One ride home. Endless tension. A humorous story of first-time mistakes and the fear of getting caught.
         </p>
@@ -1454,6 +1471,9 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-year">2022</div>
         <div class="timeline-role">Happy Vishu</div>
         <div class="timeline-detail">Lead Performer — Short Film</div>
+        <a class="timeline-thumb-link" href="https://youtu.be/lgWghFVTr_U" target="_blank" rel="noopener">
+          <img class="timeline-thumb" src="https://img.youtube.com/vi/lgWghFVTr_U/mqdefault.jpg" alt="Happy Vishu" loading="lazy" />
+        </a>
         <p class="timeline-description">
           Festivals, friends, and a little chaos. A fun-filled Vishu celebration that wraps up with a perfect comic twist.
         </p>
@@ -1463,6 +1483,9 @@ Alongside acting, I also work in editing, which helps me understand how a story 
         <div class="timeline-year">2021</div>
         <div class="timeline-role">Ria</div>
         <div class="timeline-detail">Lead Actor — Short Film</div>
+        <a class="timeline-thumb-link" href="https://youtu.be/E6T0V6uIrSg" target="_blank" rel="noopener">
+          <img class="timeline-thumb" src="https://img.youtube.com/vi/E6T0V6uIrSg/mqdefault.jpg" alt="Ria" loading="lazy" />
+        </a>
         <p class="timeline-description">
           A girl sneaks out at night to meet her lover before leaving for Bangalore, but things don’t go as planned. A fun entertainer where tension turns into a comedic rescue
         </p>
@@ -1653,20 +1676,31 @@ Alongside acting, I also work in editing, which helps me understand how a story 
 <script src="supabase-client.js"></script>
 <script>
   // ── Hydrate "Selected work" + "Stories in brief" from Supabase, with the
-  //    hardcoded markup above left in place as a fallback if this fails. ──
-  function buildReelCard(project, index) {
-    const videoId = extractYouTubeId(project.youtube_url);
-    const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
+  //    hardcoded markup above left in place as a fallback if either fails
+  //    or is still empty. The two sections are independent content types
+  //    now, so each hydrates (or falls back) on its own. ──
+  function observeReveals(container) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    container.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  }
 
+  function buildReelCard(item, index) {
     const card = document.createElement('a');
     card.className = 'reel-card';
-    card.href = project.youtube_url;
+    card.href = item.instagram_url;
     card.target = '_blank';
     card.rel = 'noopener';
 
     const bg = document.createElement('div');
     bg.className = 'reel-card-bg';
-    bg.style.backgroundImage = `url('${thumb}')`;
+    bg.style.backgroundImage = `url('${item.thumbnail_url}')`;
 
     const orb = document.createElement('div');
     orb.className = 'orb';
@@ -1678,80 +1712,31 @@ Alongside acting, I also work in editing, which helps me understand how a story 
     number.className = 'card-number';
     number.textContent = String(index + 1).padStart(2, '0');
 
-    const tag = document.createElement('div');
-    tag.className = 'card-tag';
-    tag.textContent = project.card_tag;
-
     const title = document.createElement('div');
     title.className = 'card-title';
-    title.textContent = project.title;
+    title.textContent = item.title;
 
     const role = document.createElement('div');
     role.className = 'card-role';
-    role.textContent = `${project.role_tag} · ${project.year}`;
+    role.textContent = `${item.role_tag} · ${item.year}`;
 
     const hoverLine = document.createElement('div');
     hoverLine.className = 'card-hover-line';
 
-    inner.append(number, tag, title, role, hoverLine);
+    inner.append(number, title, role, hoverLine);
     card.append(bg, orb, inner);
     return card;
   }
 
-  function buildTimelineItem(project, index) {
-    const item = document.createElement('div');
-    const delay = (index % 3) + 2; // cycles reveal-delay-2/3/4
-    item.className = `timeline-item reveal reveal-delay-${delay}`;
-
-    const dot = document.createElement('div');
-    dot.className = 'timeline-dot';
-
-    const year = document.createElement('div');
-    year.className = 'timeline-year';
-    year.textContent = project.year;
-
-    const role = document.createElement('div');
-    role.className = 'timeline-role';
-    role.textContent = project.title;
-
-    const detail = document.createElement('div');
-    detail.className = 'timeline-detail';
-    detail.textContent = project.timeline_detail;
-
-    const description = document.createElement('p');
-    description.className = 'timeline-description';
-    description.textContent = project.description;
-
-    item.append(dot, year, role, detail, description);
-    return item;
-  }
-
-  (async function hydrateProjects() {
-    const projects = await fetchProjects();
-    if (!projects || projects.length === 0) return; // keep hardcoded fallback
+  async function hydrateSelectedWork() {
+    const items = await instagram.fetchAll();
+    if (!items || items.length === 0) return; // keep hardcoded fallback
 
     const reelTrack = document.getElementById('reelTrack');
-    const timelineTrack = document.getElementById('timelineTrack');
-    if (!reelTrack || !timelineTrack) return;
+    if (!reelTrack) return;
 
     reelTrack.innerHTML = '';
-    timelineTrack.innerHTML = '';
-    projects.forEach((project, index) => {
-      reelTrack.appendChild(buildReelCard(project, index));
-      timelineTrack.appendChild(buildTimelineItem(project, index));
-    });
-
-    // Re-run the scroll-reveal / card-reveal observers for the freshly
-    // inserted elements (the originals only observed the static markup).
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    timelineTrack.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    items.forEach((item, index) => reelTrack.appendChild(buildReelCard(item, index)));
 
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
@@ -1762,7 +1747,68 @@ Alongside acting, I also work in editing, which helps me understand how a story 
       });
     }, { threshold: 0.08 });
     reelTrack.querySelectorAll('.reel-card').forEach(el => cardObserver.observe(el));
-  })();
+  }
+
+  function buildTimelineItem(item, index) {
+    const el = document.createElement('div');
+    const delay = (index % 3) + 2; // cycles reveal-delay-2/3/4
+    el.className = `timeline-item reveal reveal-delay-${delay}`;
+
+    const dot = document.createElement('div');
+    dot.className = 'timeline-dot';
+
+    const year = document.createElement('div');
+    year.className = 'timeline-year';
+    year.textContent = item.year;
+
+    const role = document.createElement('div');
+    role.className = 'timeline-role';
+    role.textContent = item.title;
+
+    const detail = document.createElement('div');
+    detail.className = 'timeline-detail';
+    detail.textContent = item.timeline_detail;
+
+    el.append(dot, year, role, detail);
+
+    const videoId = extractYouTubeId(item.youtube_url);
+    if (videoId) {
+      const thumbLink = document.createElement('a');
+      thumbLink.className = 'timeline-thumb-link';
+      thumbLink.href = item.youtube_url;
+      thumbLink.target = '_blank';
+      thumbLink.rel = 'noopener';
+      const thumbImg = document.createElement('img');
+      thumbImg.className = 'timeline-thumb';
+      thumbImg.src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      thumbImg.alt = item.title;
+      thumbImg.loading = 'lazy';
+      thumbLink.appendChild(thumbImg);
+      el.appendChild(thumbLink);
+    }
+
+    const description = document.createElement('p');
+    description.className = 'timeline-description';
+    description.textContent = item.description;
+    el.appendChild(description);
+
+    return el;
+  }
+
+  async function hydrateStories() {
+    const items = await youtube.fetchAll();
+    if (!items || items.length === 0) return; // keep hardcoded fallback
+
+    const timelineTrack = document.getElementById('timelineTrack');
+    if (!timelineTrack) return;
+
+    timelineTrack.innerHTML = '';
+    items.forEach((item, index) => timelineTrack.appendChild(buildTimelineItem(item, index)));
+    observeReveals(timelineTrack);
+  }
+
+  hydrateSelectedWork();
+  hydrateStories();
 </script>
 </body>
 </html>

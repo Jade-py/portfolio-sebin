@@ -54,6 +54,7 @@ body {
   color: var(--muted);
   margin-bottom: 6px;
 }
+.field .hint { color: var(--muted); font-weight: 400; }
 .field input, .field textarea {
   width: 100%;
   padding: 10px 12px;
@@ -107,21 +108,45 @@ body {
 .admin-header h1 { font-size: 18px; font-weight: 500; }
 .admin-body { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
 
-.project-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
-.project-row {
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.tab-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--sand);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.tab-btn.active { background: var(--terra); color: #fff; border-color: var(--terra); }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.row-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.row-item {
   background: var(--surface);
   border: 1px solid var(--sand);
   border-radius: 10px;
-  padding: 16px 18px;
+  padding: 12px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
 }
-.project-row-main { min-width: 0; }
-.project-row-title { font-weight: 500; font-size: 15px; }
-.project-row-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
-.project-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.row-thumb {
+  width: 56px; height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--sand);
+  flex-shrink: 0;
+}
+.row-main { min-width: 0; flex: 1; display: flex; align-items: center; gap: 14px; }
+.row-title { font-weight: 500; font-size: 15px; }
+.row-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.row-actions { display: flex; gap: 6px; flex-shrink: 0; }
 .icon-btn {
   width: 32px; height: 32px;
   display: flex; align-items: center; justify-content: center;
@@ -161,7 +186,7 @@ body {
 
 @media (max-width: 560px) {
   .form-grid { grid-template-columns: 1fr; }
-  .project-row { flex-direction: column; align-items: flex-start; }
+  .row-item { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -189,61 +214,105 @@ body {
 <!-- ADMIN -->
 <div id="adminScreen">
   <div class="admin-header">
-    <h1>Manage Projects</h1>
+    <h1>Manage Content</h1>
     <button class="btn btn-ghost" id="logoutBtn">Log out</button>
   </div>
 
   <div class="admin-body">
-    <p class="section-label">Selected Work &amp; Stories in Brief — shared project list</p>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabWorkBtn" data-panel="workPanel">Instagram</button>
+      <button class="tab-btn" id="tabStoriesBtn" data-panel="storiesPanel">YouTube</button>
+    </div>
 
-    <div class="project-list" id="projectList"></div>
+    <!-- SELECTED WORK (Instagram reels) -->
+    <div class="panel active" id="workPanel">
+      <p class="section-label">Selected work — Instagram reels</p>
+      <div class="row-list" id="workList"></div>
+      <button class="btn btn-primary" id="addWorkBtn">+ Add new reel</button>
 
-    <button class="btn btn-primary" id="addNewBtn">+ Add new project</button>
+      <div class="form-card" id="workFormCard">
+        <h2 id="workFormTitle">Add reel</h2>
+        <form id="workForm">
+          <input type="hidden" id="wEditingId" />
+          <div class="form-grid">
+            <div class="field" id="wYearField" style="display:none;">
+              <label for="wYear">Year</label>
+              <input type="text" id="wYear" />
+            </div>
+            <div class="field field-full">
+              <label for="wInstagram">Instagram URL</label>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <input type="url" id="wInstagram" required placeholder="https://www.instagram.com/reel/..." style="flex:1;" />
+                <button type="button" class="btn btn-ghost" id="autoFetchBtn" style="white-space:nowrap;">Auto-fetch cover + year</button>
+              </div>
+              <p class="save-msg" id="autoFetchMsg" style="margin-top:8px;"></p>
+            </div>
+            <div class="field field-full" id="wThumbnailField" style="display:none;">
+              <label for="wThumbnail">Cover image URL <span class="hint">(auto-filled by the button above, or paste one yourself — right-click → copy image address on any image)</span></label>
+              <input type="url" id="wThumbnail" />
+              <img id="wThumbnailPreview" src="" alt="" style="display:none; margin-top:10px; width:140px; aspect-ratio:9/16; object-fit:cover; border-radius:6px; border:1px solid var(--sand);" />
+            </div>
+            <div class="field">
+              <label for="wTitle">Title</label>
+              <input type="text" id="wTitle" required />
+            </div>
+            <div class="field">
+              <label for="wRoleTag">Role tag <span class="hint">(e.g. "Dramatic Lead &amp; Editor")</span></label>
+              <input type="text" id="wRoleTag" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-ghost" id="workCancelBtn">Cancel</button>
+          </div>
+          <p class="save-msg" id="workSaveMsg"></p>
+        </form>
+      </div>
+    </div>
 
-    <div class="form-card" id="formCard">
-      <h2 id="formTitle">Add project</h2>
-      <form id="projectForm">
-        <input type="hidden" id="editingId" />
-        <div class="form-grid">
-          <div class="field">
-            <label for="fTitle">Title</label>
-            <input type="text" id="fTitle" required />
+    <!-- STORIES IN BRIEF (YouTube) -->
+    <div class="panel" id="storiesPanel">
+      <p class="section-label">Stories in brief — YouTube</p>
+      <div class="row-list" id="storiesList"></div>
+      <button class="btn btn-primary" id="addStoryBtn">+ Add new story</button>
+
+      <div class="form-card" id="storyFormCard">
+        <h2 id="storyFormTitle">Add story</h2>
+        <form id="storyForm">
+          <input type="hidden" id="sEditingId" />
+          <div class="form-grid">
+            <div class="field" id="sTitleField" style="display:none;">
+              <label for="sTitle">Title</label>
+              <input type="text" id="sTitle" />
+            </div>
+            <div class="field field-full">
+              <label for="sYoutube">YouTube URL</label>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <input type="url" id="sYoutube" required placeholder="https://youtu.be/..." style="flex:1;" />
+                <button type="button" class="btn btn-ghost" id="storyAutoFetchBtn" style="white-space:nowrap;">Auto-fetch title</button>
+              </div>
+              <p class="save-msg" id="storyAutoFetchMsg" style="margin-top:8px;"></p>
+            </div>
+            <div class="field">
+              <label for="sTimelineDetail">Timeline detail <span class="hint">(e.g. "Lead Role — Short Film")</span></label>
+              <input type="text" id="sTimelineDetail" required />
+            </div>
+            <div class="field">
+              <label for="sYear">Year</label>
+              <input type="text" id="sYear" required />
+            </div>
+            <div class="field field-full">
+              <label for="sDescription">Description</label>
+              <textarea id="sDescription" required></textarea>
+            </div>
           </div>
-          <div class="field">
-            <label for="fYear">Year</label>
-            <input type="text" id="fYear" required />
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-ghost" id="storyCancelBtn">Cancel</button>
           </div>
-          <div class="field">
-            <label for="fYoutube">YouTube URL</label>
-            <input type="url" id="fYoutube" required placeholder="https://youtu.be/..." />
-          </div>
-          <div class="field">
-            <label for="fOrder">Display order</label>
-            <input type="number" id="fOrder" required value="0" />
-          </div>
-          <div class="field">
-            <label for="fCardTag">Card tag <span style="color:var(--muted)">(e.g. "Short Film · Lead")</span></label>
-            <input type="text" id="fCardTag" required />
-          </div>
-          <div class="field">
-            <label for="fRoleTag">Role tag <span style="color:var(--muted)">(e.g. "Dramatic Lead &amp; Editor")</span></label>
-            <input type="text" id="fRoleTag" required />
-          </div>
-          <div class="field field-full">
-            <label for="fTimelineDetail">Timeline detail <span style="color:var(--muted)">(e.g. "Lead Role — Short Film")</span></label>
-            <input type="text" id="fTimelineDetail" required />
-          </div>
-          <div class="field field-full">
-            <label for="fDescription">Description</label>
-            <textarea id="fDescription" required></textarea>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
-          <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
-        </div>
-        <p class="save-msg" id="saveMsg"></p>
-      </form>
+          <p class="save-msg" id="storySaveMsg"></p>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -257,22 +326,10 @@ body {
   const loginError = document.getElementById('loginError');
   const logoutBtn = document.getElementById('logoutBtn');
 
-  const projectList = document.getElementById('projectList');
-  const formCard = document.getElementById('formCard');
-  const formTitle = document.getElementById('formTitle');
-  const projectForm = document.getElementById('projectForm');
-  const addNewBtn = document.getElementById('addNewBtn');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const saveMsg = document.getElementById('saveMsg');
-  const editingId = document.getElementById('editingId');
-
-  const fields = ['fTitle', 'fYear', 'fYoutube', 'fOrder', 'fCardTag', 'fRoleTag', 'fTimelineDetail', 'fDescription']
-    .reduce((acc, id) => { acc[id] = document.getElementById(id); return acc; }, {});
-
   async function showAdmin() {
     loginScreen.style.display = 'none';
     adminScreen.style.display = 'block';
-    await loadProjects();
+    await Promise.all([loadWork(), loadStories()]);
   }
 
   function showLogin() {
@@ -304,150 +361,412 @@ body {
     showLogin();
   });
 
-  let currentProjects = [];
+  // ── Tabs ──
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.panel).classList.add('active');
+    });
+  });
 
-  async function loadProjects() {
-    const projects = await fetchProjects();
-    currentProjects = projects || [];
-    renderList();
+  // ── Selected work (Instagram) ──
+  const workList = document.getElementById('workList');
+  const workFormCard = document.getElementById('workFormCard');
+  const workFormTitle = document.getElementById('workFormTitle');
+  const workForm = document.getElementById('workForm');
+  const wEditingId = document.getElementById('wEditingId');
+  const workSaveMsg = document.getElementById('workSaveMsg');
+  const wFields = ['wTitle', 'wYear', 'wInstagram', 'wThumbnail', 'wRoleTag']
+    .reduce((acc, id) => { acc[id] = document.getElementById(id); return acc; }, {});
+
+  const wThumbnailPreview = document.getElementById('wThumbnailPreview');
+  function updateThumbnailPreview() {
+    const url = wFields.wThumbnail.value.trim();
+    if (url) {
+      wThumbnailPreview.src = url;
+      wThumbnailPreview.style.display = 'block';
+    } else {
+      wThumbnailPreview.style.display = 'none';
+    }
   }
+  wFields.wThumbnail.addEventListener('input', updateThumbnailPreview);
+  wThumbnailPreview.addEventListener('error', () => { wThumbnailPreview.style.display = 'none'; });
 
-  function renderList() {
-    if (currentProjects.length === 0) {
-      projectList.innerHTML = '<p class="empty-state">No projects yet — add the first one below.</p>';
+  const autoFetchBtn = document.getElementById('autoFetchBtn');
+  const autoFetchMsg = document.getElementById('autoFetchMsg');
+  autoFetchBtn.addEventListener('click', async () => {
+    const url = wFields.wInstagram.value.trim();
+    autoFetchMsg.style.display = 'block';
+    if (!url) {
+      autoFetchMsg.className = 'save-msg error';
+      autoFetchMsg.textContent = 'Paste the Instagram URL first.';
       return;
     }
-    projectList.innerHTML = '';
-    currentProjects.forEach((project, index) => {
+    autoFetchBtn.disabled = true;
+    autoFetchMsg.className = 'save-msg';
+    autoFetchMsg.textContent = 'Fetching…';
+
+    const result = await fetchInstagramCover(url);
+
+    autoFetchBtn.disabled = false;
+    if (result.error) {
+      autoFetchMsg.className = 'save-msg error';
+      autoFetchMsg.textContent = result.error + ' You can still paste a cover URL manually below.';
+      return;
+    }
+
+    wFields.wThumbnail.value = result.thumbnailUrl;
+    updateThumbnailPreview();
+    if (result.year) wFields.wYear.value = result.year;
+    autoFetchMsg.className = 'save-msg success';
+    autoFetchMsg.textContent = 'Cover and year fetched — review before saving.';
+  });
+
+  let currentWork = [];
+
+  async function loadWork() {
+    const rows = await instagram.fetchAll();
+    currentWork = rows || [];
+    renderWorkList();
+  }
+
+  function renderWorkList() {
+    if (currentWork.length === 0) {
+      workList.innerHTML = '<p class="empty-state">No reels yet — add the first one below.</p>';
+      return;
+    }
+    workList.innerHTML = '';
+    currentWork.forEach((item, index) => {
       const row = document.createElement('div');
-      row.className = 'project-row';
+      row.className = 'row-item';
 
       const main = document.createElement('div');
-      main.className = 'project-row-main';
+      main.className = 'row-main';
+
+      const thumb = document.createElement('img');
+      thumb.className = 'row-thumb';
+      thumb.src = item.thumbnail_url;
+      thumb.alt = '';
+
+      const text = document.createElement('div');
       const title = document.createElement('div');
-      title.className = 'project-row-title';
-      title.textContent = `${project.title} (${project.year})`;
+      title.className = 'row-title';
+      title.textContent = `${item.title} (${item.year})`;
       const meta = document.createElement('div');
-      meta.className = 'project-row-meta';
-      meta.textContent = `${project.card_tag} · order ${project.display_order}`;
-      main.append(title, meta);
+      meta.className = 'row-meta';
+      meta.textContent = `${item.role_tag} · order ${item.display_order}`;
+      text.append(title, meta);
+      main.append(thumb, text);
 
       const actions = document.createElement('div');
-      actions.className = 'project-row-actions';
+      actions.className = 'row-actions';
 
       const upBtn = document.createElement('button');
       upBtn.className = 'icon-btn';
       upBtn.textContent = '↑';
       upBtn.disabled = index === 0;
-      upBtn.onclick = () => moveProject(index, -1);
+      upBtn.onclick = () => moveWork(index, -1);
 
       const downBtn = document.createElement('button');
       downBtn.className = 'icon-btn';
       downBtn.textContent = '↓';
-      downBtn.disabled = index === currentProjects.length - 1;
-      downBtn.onclick = () => moveProject(index, 1);
+      downBtn.disabled = index === currentWork.length - 1;
+      downBtn.onclick = () => moveWork(index, 1);
 
       const editBtn = document.createElement('button');
       editBtn.className = 'icon-btn';
       editBtn.textContent = '✎';
-      editBtn.onclick = () => openEdit(project);
+      editBtn.onclick = () => openEditWork(item);
 
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'icon-btn';
       deleteBtn.textContent = '✕';
-      deleteBtn.onclick = () => removeProject(project);
+      deleteBtn.onclick = () => removeWork(item);
 
       actions.append(upBtn, downBtn, editBtn, deleteBtn);
       row.append(main, actions);
-      projectList.appendChild(row);
+      workList.appendChild(row);
     });
   }
 
-  async function moveProject(index, direction) {
+  async function moveWork(index, direction) {
     const other = index + direction;
-    if (other < 0 || other >= currentProjects.length) return;
-    const a = currentProjects[index];
-    const b = currentProjects[other];
-    const aOrder = a.display_order;
-    const bOrder = b.display_order;
+    if (other < 0 || other >= currentWork.length) return;
+    const a = currentWork[index], b = currentWork[other];
     await Promise.all([
-      updateProject(a.id, { display_order: bOrder }),
-      updateProject(b.id, { display_order: aOrder }),
+      instagram.update(a.id, { display_order: b.display_order }),
+      instagram.update(b.id, { display_order: a.display_order }),
     ]);
-    await loadProjects();
+    await loadWork();
   }
 
-  function openAdd() {
-    editingId.value = '';
-    formTitle.textContent = 'Add project';
-    projectForm.reset();
-    fields.fOrder.value = currentProjects.length;
-    saveMsg.style.display = 'none';
-    formCard.classList.add('open');
-    formCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  function openAddWork() {
+    wEditingId.value = '';
+    workFormTitle.textContent = 'Add reel';
+    workForm.reset();
+    workSaveMsg.style.display = 'none';
+    autoFetchMsg.style.display = 'none';
+    updateThumbnailPreview();
+    workFormCard.classList.add('open');
+    workFormCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function openEdit(project) {
-    editingId.value = project.id;
-    formTitle.textContent = 'Edit project';
-    fields.fTitle.value = project.title;
-    fields.fYear.value = project.year;
-    fields.fYoutube.value = project.youtube_url;
-    fields.fOrder.value = project.display_order;
-    fields.fCardTag.value = project.card_tag;
-    fields.fRoleTag.value = project.role_tag;
-    fields.fTimelineDetail.value = project.timeline_detail;
-    fields.fDescription.value = project.description;
-    saveMsg.style.display = 'none';
-    formCard.classList.add('open');
-    formCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  function openEditWork(item) {
+    wEditingId.value = item.id;
+    workFormTitle.textContent = 'Edit reel';
+    wFields.wTitle.value = item.title;
+    wFields.wYear.value = item.year;
+    wFields.wInstagram.value = item.instagram_url;
+    wFields.wThumbnail.value = item.thumbnail_url;
+    wFields.wRoleTag.value = item.role_tag;
+    workSaveMsg.style.display = 'none';
+    autoFetchMsg.style.display = 'none';
+    updateThumbnailPreview();
+    workFormCard.classList.add('open');
+    workFormCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function closeForm() {
-    formCard.classList.remove('open');
-    projectForm.reset();
+  function closeWorkForm() {
+    workFormCard.classList.remove('open');
+    workForm.reset();
+    updateThumbnailPreview();
   }
 
-  addNewBtn.addEventListener('click', openAdd);
-  cancelBtn.addEventListener('click', closeForm);
+  document.getElementById('addWorkBtn').addEventListener('click', openAddWork);
+  document.getElementById('workCancelBtn').addEventListener('click', closeWorkForm);
 
-  projectForm.addEventListener('submit', async (e) => {
+  workForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const payload = {
-      title: fields.fTitle.value.trim(),
-      year: fields.fYear.value.trim(),
-      youtube_url: fields.fYoutube.value.trim(),
-      display_order: parseInt(fields.fOrder.value, 10) || 0,
-      card_tag: fields.fCardTag.value.trim(),
-      role_tag: fields.fRoleTag.value.trim(),
-      timeline_detail: fields.fTimelineDetail.value.trim(),
-      description: fields.fDescription.value.trim(),
+      title: wFields.wTitle.value.trim(),
+      year: wFields.wYear.value.trim(),
+      instagram_url: wFields.wInstagram.value.trim(),
+      thumbnail_url: wFields.wThumbnail.value.trim(),
+      role_tag: wFields.wRoleTag.value.trim(),
     };
+    if (!wEditingId.value) payload.display_order = currentWork.length; // new rows go to the end; reordering after that is via the ↑/↓ arrows
 
-    const { error } = editingId.value
-      ? await updateProject(editingId.value, payload)
-      : await createProject(payload);
-
-    saveMsg.style.display = 'block';
-    if (error) {
-      saveMsg.className = 'save-msg error';
-      saveMsg.textContent = error.message;
+    workSaveMsg.style.display = 'block';
+    const duplicate = currentWork.some(item => item.instagram_url === payload.instagram_url && item.id !== wEditingId.value);
+    if (duplicate) {
+      workSaveMsg.className = 'save-msg error';
+      workSaveMsg.textContent = 'This reel has already been added.';
       return;
     }
-    saveMsg.className = 'save-msg success';
-    saveMsg.textContent = 'Saved.';
-    await loadProjects();
-    setTimeout(closeForm, 500);
+
+    const { error } = wEditingId.value
+      ? await instagram.update(wEditingId.value, payload)
+      : await instagram.create(payload);
+
+    if (error) {
+      workSaveMsg.className = 'save-msg error';
+      workSaveMsg.textContent = error.code === '23505' ? 'This reel has already been added.' : error.message;
+      return;
+    }
+    workSaveMsg.className = 'save-msg success';
+    workSaveMsg.textContent = 'Saved.';
+    await loadWork();
+    setTimeout(closeWorkForm, 500);
   });
 
-  async function removeProject(project) {
-    if (!confirm(`Delete "${project.title}"? This can't be undone.`)) return;
-    const { error } = await deleteProject(project.id);
-    if (error) {
-      alert('Failed to delete: ' + error.message);
+  async function removeWork(item) {
+    if (!confirm(`Delete "${item.title}"? This can't be undone.`)) return;
+    const { error } = await instagram.remove(item.id);
+    if (error) { alert('Failed to delete: ' + error.message); return; }
+    await loadWork();
+  }
+
+  // ── Stories in brief (YouTube) ──
+  const storiesList = document.getElementById('storiesList');
+  const storyFormCard = document.getElementById('storyFormCard');
+  const storyFormTitle = document.getElementById('storyFormTitle');
+  const storyForm = document.getElementById('storyForm');
+  const sEditingId = document.getElementById('sEditingId');
+  const storySaveMsg = document.getElementById('storySaveMsg');
+  const sFields = ['sTitle', 'sYear', 'sYoutube', 'sTimelineDetail', 'sDescription']
+    .reduce((acc, id) => { acc[id] = document.getElementById(id); return acc; }, {});
+
+  const storyAutoFetchBtn = document.getElementById('storyAutoFetchBtn');
+  const storyAutoFetchMsg = document.getElementById('storyAutoFetchMsg');
+  storyAutoFetchBtn.addEventListener('click', async () => {
+    const url = sFields.sYoutube.value.trim();
+    storyAutoFetchMsg.style.display = 'block';
+    if (!url) {
+      storyAutoFetchMsg.className = 'save-msg error';
+      storyAutoFetchMsg.textContent = 'Paste the YouTube URL first.';
       return;
     }
-    await loadProjects();
+    storyAutoFetchBtn.disabled = true;
+    storyAutoFetchMsg.className = 'save-msg';
+    storyAutoFetchMsg.textContent = 'Fetching…';
+
+    const result = await fetchYouTubeTitle(url);
+
+    storyAutoFetchBtn.disabled = false;
+    if (result.error) {
+      storyAutoFetchMsg.className = 'save-msg error';
+      storyAutoFetchMsg.textContent = result.error + ' You can still type the title manually.';
+      return;
+    }
+
+    sFields.sTitle.value = result.title;
+    storyAutoFetchMsg.className = 'save-msg success';
+    storyAutoFetchMsg.textContent = 'Title fetched — review before saving.';
+  });
+
+  let currentStories = [];
+
+  async function loadStories() {
+    const rows = await youtube.fetchAll();
+    currentStories = rows || [];
+    renderStoriesList();
+  }
+
+  function renderStoriesList() {
+    if (currentStories.length === 0) {
+      storiesList.innerHTML = '<p class="empty-state">No stories yet — add the first one below.</p>';
+      return;
+    }
+    storiesList.innerHTML = '';
+    currentStories.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'row-item';
+
+      const main = document.createElement('div');
+      main.className = 'row-main';
+
+      const videoId = extractYouTubeId(item.youtube_url);
+      const thumb = document.createElement('img');
+      thumb.className = 'row-thumb';
+      thumb.src = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
+      thumb.alt = '';
+
+      const text = document.createElement('div');
+      const title = document.createElement('div');
+      title.className = 'row-title';
+      title.textContent = `${item.title} (${item.year})`;
+      const meta = document.createElement('div');
+      meta.className = 'row-meta';
+      meta.textContent = `${item.timeline_detail} · order ${item.display_order}`;
+      text.append(title, meta);
+      main.append(thumb, text);
+
+      const actions = document.createElement('div');
+      actions.className = 'row-actions';
+
+      const upBtn = document.createElement('button');
+      upBtn.className = 'icon-btn';
+      upBtn.textContent = '↑';
+      upBtn.disabled = index === 0;
+      upBtn.onclick = () => moveStory(index, -1);
+
+      const downBtn = document.createElement('button');
+      downBtn.className = 'icon-btn';
+      downBtn.textContent = '↓';
+      downBtn.disabled = index === currentStories.length - 1;
+      downBtn.onclick = () => moveStory(index, 1);
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'icon-btn';
+      editBtn.textContent = '✎';
+      editBtn.onclick = () => openEditStory(item);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'icon-btn';
+      deleteBtn.textContent = '✕';
+      deleteBtn.onclick = () => removeStory(item);
+
+      actions.append(upBtn, downBtn, editBtn, deleteBtn);
+      row.append(main, actions);
+      storiesList.appendChild(row);
+    });
+  }
+
+  async function moveStory(index, direction) {
+    const other = index + direction;
+    if (other < 0 || other >= currentStories.length) return;
+    const a = currentStories[index], b = currentStories[other];
+    await Promise.all([
+      youtube.update(a.id, { display_order: b.display_order }),
+      youtube.update(b.id, { display_order: a.display_order }),
+    ]);
+    await loadStories();
+  }
+
+  function openAddStory() {
+    sEditingId.value = '';
+    storyFormTitle.textContent = 'Add story';
+    storyForm.reset();
+    sFields.sYear.value = new Date().getFullYear();
+    storySaveMsg.style.display = 'none';
+    storyAutoFetchMsg.style.display = 'none';
+    storyFormCard.classList.add('open');
+    storyFormCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function openEditStory(item) {
+    sEditingId.value = item.id;
+    storyFormTitle.textContent = 'Edit story';
+    sFields.sTitle.value = item.title;
+    sFields.sYear.value = item.year;
+    sFields.sYoutube.value = item.youtube_url;
+    sFields.sTimelineDetail.value = item.timeline_detail;
+    sFields.sDescription.value = item.description;
+    storySaveMsg.style.display = 'none';
+    storyAutoFetchMsg.style.display = 'none';
+    storyFormCard.classList.add('open');
+    storyFormCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function closeStoryForm() {
+    storyFormCard.classList.remove('open');
+    storyForm.reset();
+  }
+
+  document.getElementById('addStoryBtn').addEventListener('click', openAddStory);
+  document.getElementById('storyCancelBtn').addEventListener('click', closeStoryForm);
+
+  storyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      title: sFields.sTitle.value.trim(),
+      year: sFields.sYear.value.trim(),
+      youtube_url: sFields.sYoutube.value.trim(),
+      timeline_detail: sFields.sTimelineDetail.value.trim(),
+      description: sFields.sDescription.value.trim(),
+    };
+    if (!sEditingId.value) payload.display_order = currentStories.length; // new rows go to the end; reordering after that is via the ↑/↓ arrows
+
+    storySaveMsg.style.display = 'block';
+    const duplicate = currentStories.some(item => item.youtube_url === payload.youtube_url && item.id !== sEditingId.value);
+    if (duplicate) {
+      storySaveMsg.className = 'save-msg error';
+      storySaveMsg.textContent = 'This video has already been added.';
+      return;
+    }
+
+    const { error } = sEditingId.value
+      ? await youtube.update(sEditingId.value, payload)
+      : await youtube.create(payload);
+
+    if (error) {
+      storySaveMsg.className = 'save-msg error';
+      storySaveMsg.textContent = error.code === '23505' ? 'This video has already been added.' : error.message;
+      return;
+    }
+    storySaveMsg.className = 'save-msg success';
+    storySaveMsg.textContent = 'Saved.';
+    await loadStories();
+    setTimeout(closeStoryForm, 500);
+  });
+
+  async function removeStory(item) {
+    if (!confirm(`Delete "${item.title}"? This can't be undone.`)) return;
+    const { error } = await youtube.remove(item.id);
+    if (error) { alert('Failed to delete: ' + error.message); return; }
+    await loadStories();
   }
 </script>
 </body>
